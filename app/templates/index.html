@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastAPI App</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body>
+    <div class="header">
+        <h1>Vulnerabilities Table</h1>
+    </div>
+
+    <div class="container">
+        <div class="main-content">
+            {% if vulnerabilities %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Published</th>
+                        <th>Source Identifier</th>
+                        <th>Vuln Status</th>
+                        <th>CISA Action Due</th>
+                        <th>CISA Exploit Add</th>
+                        <th>CISA Required Action</th>
+                        <th>CISA Vulnerability Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vulnerability in vulnerabilities %}
+                    <tr>
+                        <td>{{ vulnerability.id }}</td>
+                        <td>{{ vulnerability.published }}</td>
+                        <td>{{ vulnerability.sourceIdentifier }}</td>
+                        <td>{{ vulnerability.vulnStatus }}</td>
+                        <td>{{ vulnerability.cisaActionDue }}</td>
+                        <td>{{ vulnerability.cisaExploitAdd }}</td>
+                        <td>{{ vulnerability.cisaRequiredAction }}</td>
+                        <td>{{ vulnerability.cisaVulnerabilityName }}</td>
+                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <!-- Pagination Controls -->
+            <div class="pagination">
+                {% if has_previous %}
+                    <a href="?page={{ page - 1 }}&per_page={{ per_page }}">Previous</a>
+                {% endif %}
+    
+                {% if 1 not in pagination_range %}
+                    <a href="?page=1&per_page={{ per_page }}">1</a>
+                    {% if 2 not in pagination_range %}
+                        <span>...</span>
+                    {% endif %}
+                {% endif %}
+    
+                {% for p in pagination_range %}
+                    {% if p == page %}
+                        <span class="current-page">{{ p }}</span>
+                    {% else %}
+                        <a href="?page={{ p }}&per_page={{ per_page }}">{{ p }}</a>
+                    {% endif %}
+                {% endfor %}
+    
+                {% if total_pages not in pagination_range %}
+                    {% if total_pages - 1 not in pagination_range %}
+                        <span>...</span>
+                    {% endif %}
+                    <a href="?page={{ total_pages }}&per_page={{ per_page }}">{{ total_pages }}</a>
+                {% endif %}
+    
+                {% if has_next %}
+                    <a href="?page={{ page + 1 }}&per_page={{ per_page }}">Next</a>
+                {% endif %}
+            </div>
+            {% else %}
+            <div class="no-data">No vulnerabilities found.</div>
+            {% endif %}
+        </div>
+    </div>
+
+</body>
+
+</html>

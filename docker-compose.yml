@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+
+  data_driver:
+    build:
+      context: ./data_driver
+    ports:
+      - "8000:5000"
+    environment:
+      - DATABASE_URL=sqlite:///app/db/vulnerabilities.db
+    volumes:
+      - ./data_driver/db:/app/db # Shared SQLite database
+    env_file:
+      - .env
+  fastapi:
+    build:
+      context: ./app
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    depends_on:
+      - data_driver
+    environment:
+      - DATA_DRIVER_URL=http://test-security-data_driver:5000
+
+  
+
+# Volumes to persist data
+volumes:
+  db_data:
