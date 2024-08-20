@@ -1,6 +1,14 @@
 version: '3.8'
 
 services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"  # Port for RabbitMQ service
+      - "15672:15672" # Port for RabbitMQ management console
+    hostname: rabbitmq
+    networks:
+      - app-network
 
   data_driver:
     build:
@@ -9,10 +17,14 @@ services:
       - "8000:5000"
     environment:
       - DATABASE_URL=sqlite:///app/db/vulnerabilities.db
+      - RABBITMQ_HOST=rabbitmq
     volumes:
       - ./data_driver/db:/app/db # Shared SQLite database
     env_file:
       - .env
+    networks:
+      - app-network
+
   fastapi:
     build:
       context: ./app
@@ -22,8 +34,15 @@ services:
       - .env
     depends_on:
       - data_driver
+      - rabbitmq
     environment:
       - DATA_DRIVER_URL=http://test-security-data_driver:5000
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge      
 
   
 

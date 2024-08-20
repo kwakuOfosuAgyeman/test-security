@@ -27,19 +27,21 @@
                         <th>CISA Exploit Add</th>
                         <th>CISA Required Action</th>
                         <th>CISA Vulnerability Name</th>
+                        <th>Description</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for vulnerability in vulnerabilities %}
                     <tr>
-                        <td>{{ vulnerability.id }}</td>
-                        <td>{{ vulnerability.published }}</td>
-                        <td>{{ vulnerability.sourceIdentifier }}</td>
-                        <td>{{ vulnerability.vulnStatus }}</td>
-                        <td>{{ vulnerability.cisaActionDue }}</td>
-                        <td>{{ vulnerability.cisaExploitAdd }}</td>
-                        <td>{{ vulnerability.cisaRequiredAction }}</td>
-                        <td>{{ vulnerability.cisaVulnerabilityName }}</td>
+                        <td>{{ vulnerability.cve.id }}</td>
+                        <td>{{ vulnerability.cve.published }}</td>
+                        <td>{{ vulnerability.cve.sourceIdentifier }}</td>
+                        <td>{{ vulnerability.cve.vulnStatus }}</td>
+                        <td>{{ vulnerability.cve.cisaActionDue }}</td>
+                        <td>{{ vulnerability.cve.cisaExploitAdd }}</td>
+                        <td>{{ vulnerability.cve.cisaRequiredAction }}</td>
+                        <td>{{ vulnerability.cve.cisaVulnerabilityName }}</td>
+                        <td>{{ vulnerability.cve.descriptions | map(attribute='value') | join(', ') }}</td>
                         
                     </tr>
                     {% endfor %}
