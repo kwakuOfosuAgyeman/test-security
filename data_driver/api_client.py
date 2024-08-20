@@ -2,7 +2,7 @@
 import requests
 import os
 from typing import List
-from models import Vulnerability
+from app.schemas import Vulnerability
 
 class APIClient:
     def __init__(self):

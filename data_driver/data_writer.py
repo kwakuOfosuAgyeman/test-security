@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from models import Vulnerability
-from vulnerability import VulnerabilityDB
+from app.schemas import Vulnerability
+from app.models import VulnerabilityDB
 from api_client import APIClient
 
 class DataWriter:

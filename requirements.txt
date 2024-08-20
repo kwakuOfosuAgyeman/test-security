@@ -1,5 +1,0 @@
-fastapi
-uvicorn
-sqlalchemy
-pymysql  # For MySQL connection
-requests
