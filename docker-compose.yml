@@ -1,32 +1,37 @@
-version: '3.8'
+version: '3.9'
 
 services:
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 
   data_driver:
-    build:
-      context: ./data_driver
-    ports:
-      - "8000:5000"
+    build: ./data_driver
     environment:
-      - DATABASE_URL=sqlite:///app/db/vulnerabilities.db
+      - DATABASE_URL=sqlite:///./vulnerabilities.db
+      - RABBITMQ_HOST=rabbitmq
     volumes:
-      - ./data_driver/db:/app/db # Shared SQLite database
-    env_file:
-      - .env
-  fastapi:
-    build:
-      context: ./app
-    ports:
-      - "8080:8080"
-    env_file:
-      - .env
+      - data_volume:/app
     depends_on:
-      - data_driver
+      - rabbitmq
+
+  fastapi:
+    build: ./fastapi_app
     environment:
-      - DATA_DRIVER_URL=http://test-security-data_driver:5000
+      - DATA_DRIVER_URL=http://data_driver:8000
+      - RABBITMQ_HOST=rabbitmq
+    depends_on:
+      - rabbitmq
+      - data_driver
 
-  
+  api_gateway:
+    build: ./api_gateway
+    ports:
+      - "80:80"
+    depends_on:
+      - fastapi
 
-# Volumes to persist data
 volumes:
-  db_data:
+  data_volume:
